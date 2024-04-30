@@ -212,7 +212,7 @@ require 'services/koneksi.php';
                     </div>
                     <ul class="navbar-nav  justify-content-end">
                         <li class="nav-item d-flex align-items-center gap-4">
-                            <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
+                            <a href="/profile/index.php" class="nav-link text-body font-weight-bold px-0">
                                 <?php
                                 $queryUser = "SELECT * FROM admin";
                                 $sqlUser = mysqli_query($conn, $queryUser);
@@ -329,7 +329,7 @@ require 'services/koneksi.php';
                                         <p class="text-sm mb-0 text-capitalize font-weight-bold">Penjualan</p>
                                         <h5 class="font-weight-bolder mb-0">
                                             <?php
-                                            $queryPenjualan = "SELECT COUNT(*) AS total_penjualan FROM produk";
+                                            $queryPenjualan = "SELECT COUNT(*) AS total_penjualan FROM penjualan";
                                             $resultPenjualan = mysqli_query($conn, $queryPenjualan);
 
                                             if ($resultPenjualan) {
@@ -359,25 +359,7 @@ require 'services/koneksi.php';
                         <div class="card-header pb-0">
                             <div class="row">
                                 <div class="col-lg-6 col-7">
-                                    <h6>Produk</h6>
-                                    <?php
-                                    $queryTotalProduk = "SELECT COUNT(*) AS total_produk FROM produk";
-                                    $resultTotalProduk = mysqli_query($conn, $queryTotalProduk);
-                                    $row = mysqli_fetch_assoc($resultTotalProduk);
-                                    $totalProduk = $row['total_produk'];
-
-                                    if ($totalProduk == 0) {
-                                        $message = "Produk Masih Kosong.";
-                                    } else {
-                                        $message = "Jumlah produk : " . $totalProduk;
-                                    }
-                                    ?>
-                                    <p class="text-sm mb-4">
-                                        <i class="fa fa-check text-info" aria-hidden="true"></i>
-                                        <span class="font-weight-bold ms-1">
-                                            <?= $message ?>
-                                        </span>
-                                    </p>
+                                    <h6 class="pb-3">Ringkasan</h6>
                                 </div>
                             </div>
                         </div>
@@ -390,127 +372,90 @@ require 'services/koneksi.php';
                                                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 Produk</th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Ditambahkan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $queryProduk = "SELECT produk.*, kategori.nama_kategori FROM produk 
-                                        INNER JOIN kategori ON produk.id_kategori = kategori.id_kategori";
-                                        $resultProduk = mysqli_query($conn, $queryProduk);
-
-                                        if (mysqli_num_rows($resultProduk) > 0) {
-                                            while ($row = mysqli_fetch_object($resultProduk)) {
-                                                ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex px-2 py-1">
-                                                            <div>
-                                                                <img src="produk/img/<?= $row->image ?>"
-                                                                    class="avatar avatar-sm me-3" alt="xd">
-                                                            </div>
-                                                            <div class="d-flex flex-column justify-content-center">
-                                                                <h6 class="mb-0 text-sm">
-                                                                    <?= $row->nama_produk ?>
-                                                                </h6>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="align-middle text-sm">
-                                                        <span class="text-xs font-weight-bold">
-                                                            <?php
-                                                            $created_at = $row->created_at;
-
-                                                            $formatted_date = date('d M Y', strtotime($created_at));
-
-                                                            echo $formatted_date;
-                                                            ?>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            <?php }
-                                        } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mb-5">
-                        <div class="card-header pb-0">
-                            <div class="row">
-                                <div class="col-lg-6 col-7">
-                                    <h6>Kategori</h6>
-                                    <?php
-                                    $queryTotalKateori = "SELECT COUNT(*) AS total_kategori FROM kategori";
-                                    $resultTotalKategori = mysqli_query($conn, $queryTotalKateori);
-                                    $row = mysqli_fetch_assoc($resultTotalKategori);
-                                    $totalKategori = $row['total_kategori'];
-
-                                    if ($totalKategori == 0) {
-                                        $message = "Kategori Masih Kosong.";
-                                    } else {
-                                        $message = "Jumlah kategori : " . $totalKategori;
-                                    }
-                                    ?>
-                                    <p class="text-sm mb-4">
-                                        <i class="fa fa-check text-info" aria-hidden="true"></i>
-                                        <span class="font-weight-bold ms-1">
-                                            <?= $message ?>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body px-0 pb-2">
-                            <div class="table-responsive">
-                                <table class="table align-items-center mb-0">
-                                    <thead>
-                                        <tr>
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Harga / Stok</th>
                                             <th
                                                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                 Kategori</th>
                                             <th
                                                 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Ditambahkan</th>
+                                                Total Penjualan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $queryKategori = "SELECT * FROM kategori";
-                                        $resultKategori = mysqli_query($conn, $queryKategori);
-
-                                        if (mysqli_num_rows($resultKategori) > 0) {
-                                            while ($row = mysqli_fetch_object($resultKategori)) {
-                                                ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex px-2 py-1">
-                                                            <div>
-                                                                <img src="kategori/img/<?= $row->image ?>"
-                                                                    class="avatar avatar-sm me-3" alt="xd">
+                                        $queryRingkasan = "SELECT 
+                        produk.nama_produk,
+                        produk.deskripsi,
+                        produk.harga,
+                        produk.stok,
+                        kategori.nama_kategori,
+                        SUM(penjualan.jumlah) AS total_penjualan 
+                    FROM 
+                        penjualan 
+                    INNER JOIN 
+                        produk ON penjualan.id_produk = produk.id_produk
+                    INNER JOIN
+                        kategori ON produk.id_kategori = kategori.id_kategori
+                    GROUP BY 
+                        produk.nama_produk,
+                        produk.deskripsi,
+                        produk.harga,
+                        produk.stok,
+                        kategori.nama_kategori
+                    ORDER BY 
+                        produk.nama_produk";
+                                        $resultRingkasan = $conn->query($queryRingkasan);
+                                            if (mysqli_num_rows($resultRingkasan) > 0) {
+                                                while ($row = mysqli_fetch_object($resultRingkasan)) {
+                                                    ?>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="d-flex px-2 py-1">
+                                                                <div>
+                                                                    <!-- <img src="produk/img/<?= $row->image ?>" class="avatar avatar-sm me-3" alt="xd"> -->
+                                                                </div>
+                                                                <div class="d-flex flex-column justify-content-center">
+                                                                    <h6 class="mb-0 text-sm">
+                                                                        <?= $row->nama_produk ?>
+                                                                    </h6>
+                                                                    <p class="mb-0 text-sm text-secondary">
+                                                                        <?= $row->deskripsi ?>
+                                                                    </p>
+                                                                </div>
                                                             </div>
-                                                            <div class="d-flex flex-column justify-content-center">
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex px-2 py-1">
+                                                                <div class="d-flex flex-column justify-content-center">
+                                                                    <h6 class="mb-0 text-sm">
+                                                                        <?= 'Rp ' . number_format($row->harga, 2, ',', '.') ?>
+                                                                    </h6>
+                                                                    <p class="mb-0 text-sm text-secondary">
+                                                                        <?= $row->stok == 0 ? 'Kosong' : $row->stok . ' pcs' ?>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex px-2 py-1">
                                                                 <h6 class="mb-0 text-sm">
                                                                     <?= $row->nama_kategori ?>
                                                                 </h6>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="align-middle text-sm">
-                                                        <span class="text-xs font-weight-bold">
-                                                            <?php
-                                                            $created_at = $row->created_at;
-
-                                                            $formatted_date = date('d M Y', strtotime($created_at));
-
-                                                            echo $formatted_date;
-                                                            ?>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            <?php }
-                                        } ?>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex px-2 py-1">
+                                                                <h6 class="mb-0 text-sm">
+                                                                    <?= $row->total_penjualan ?>
+                                                                </h6>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -574,7 +519,8 @@ require 'services/koneksi.php';
                                         <h6 class="text-dark text-sm font-weight-bold mb-0">Kelola Penjualan
                                         </h6>
                                         <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">Admin dapat melihat
-                                            statistik jumlah penjualan produk, termasuk mengatur. seperti, menambah, mengedit, menghpuus penjualan
+                                            statistik jumlah penjualan produk, termasuk mengatur. seperti, menambah,
+                                            mengedit, menghpuus penjualan
                                             produk.</p>
                                     </div>
                                 </div>
