@@ -29,6 +29,11 @@
                         </select>
                     </div>
                     <div class="mb-3">
+                        <label for="tanggal_penjualan" class="form-label">Total Penjualan</label>
+                        <input type="date" class="form-control" id="tanggal_penjualan" name="tanggal_penjualan">
+                        <p class="text-secondary">*jika tidak diisi, otomatis terisi hari ini.</p>
+                    </div>
+                    <div class="mb-3">
                         <label for="jumlah" class="form-label">Total Penjualan</label>
                         <input type="number" class="form-control" id="jumlah" name="jumlah" min="1" required>
                     </div>

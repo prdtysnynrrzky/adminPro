@@ -51,7 +51,6 @@ while ($row = $resultGrafik->fetch_object()) {
         $labels[] = $bulan;
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -257,7 +256,7 @@ while ($row = $resultGrafik->fetch_object()) {
                     </div>
                     <ul class="navbar-nav  justify-content-end">
                         <li class="nav-item d-flex align-items-center gap-4">
-                            <a href="i../profile/index.php" class="nav-link text-body font-weight-bold px-0">
+                            <a href="../profile/index.php" class="nav-link text-body font-weight-bold px-0">
                                 <?php
                                 $queryUser = "SELECT * FROM admin";
                                 $sqlUser = mysqli_query($conn, $queryUser);
@@ -394,9 +393,13 @@ while ($row = $resultGrafik->fetch_object()) {
                 <div class="card z-index-2">
                     <div class="card-header pb-0 d-flex align-items-center justify-content-between">
                         <h6>Gambaran Penjualan</h6>
-                        <button type="button" class="btn btn-primary btn-sm bg-gradient-primary ml-auto"
-                            data-bs-toggle="modal" data-bs-target="#cetakChart" disabled>
-                            Report
+                        <?php $chartIsEmpty = empty($labels) || empty($datasets);
+
+                        $downloadButtonDisabled = $chartIsEmpty ? 'disabled' : '';
+                        ?>
+                        <button id="download-chart" class="btn btn-primary btn-sm bg-gradient-primary ml-auto"
+                            <?= $downloadButtonDisabled ?>>
+                            Download
                         </button>
                     </div>
                     <div class="card-body p-3">
@@ -413,43 +416,67 @@ while ($row = $resultGrafik->fetch_object()) {
     <script src="../soft-ui/assets/js/core/bootstrap.min.js"></script>
     <script src="../soft-ui/assets/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="../soft-ui/assets/js/plugins/smooth-scrollbar.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../assets/js/plugins/chartjs.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js Plugin Annotation -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <script>
         var ctx2 = document.getElementById("chart-line").getContext("2d");
 
-        new Chart(ctx2, {
+        var chart = new Chart(ctx2, {
             type: "line",
             data: {
-                labels: <?= json_encode($labels); ?>,
-            datasets: <?= json_encode(array_values($datasets)); ?>
-    },
-            options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'bottom'
-                }
+                labels: <?php echo json_encode($labels); ?>,
+                datasets: <?php echo json_encode(array_values($datasets)); ?>
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
                         display: true,
-                        text: 'Total Penjualan'
+                        position: 'bottom'
+                    },
+                    annotation: {
+                        annotations: [{
+                            drawTime: "afterDraw",
+                            type: "box",
+                            xScaleID: "x",
+                            yScaleID: "y",
+                            xMin: 0,
+                            xMax: 1,
+                            yMin: 0,
+                            yMax: 1,
+                            backgroundColor: "rgba(255, 255, 255, 0.8)"
+                        }]
                     }
                 },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Bulan'
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Total Penjualan'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Bulan'
+                        }
                     }
                 }
             }
-        }
-});
+        });
+
+        document.getElementById('download-chart').addEventListener('click', function() {
+            var url = chart.toBase64Image('image/png', 1.0);
+            var link = document.createElement('a');
+            link.download = 'chart.png';
+            link.href = url;
+            link.click();
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

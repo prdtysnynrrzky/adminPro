@@ -6,49 +6,13 @@ if (isset($_GET['hapus'])) {
     $resultCheckPenjualan = mysqli_query($conn, $queryCheckPenjualan);
 
     if ($resultCheckPenjualan && mysqli_num_rows($resultCheckPenjualan) > 0) {
-        echo "<script>
-            Swal.fire({
-                title: 'Gagal!',
-                text: 'Terdapat " . mysqli_num_rows($resultCheckPenjualan) . " penjualan terkait produk ini. Hapus penjualan terlebih dahulu.',
-                icon: 'error',
-                timer: 1000,
-                timerProgressBar: true,
-                showConfirmButton: false
-            }).then(() => {
-                window.location.href = 'index.php';
-            });
-        </script>";
-        exit;
-    }
-
-    $queryShowProduk = "SELECT * FROM produk WHERE id_produk = '$id_produk'";
-    $sqlShowProduk = mysqli_query($conn, $queryShowProduk);
-    $resultProduk = mysqli_fetch_array($sqlShowProduk);
-
-    unlink("img/".$resultProduk['image']);
-
-    if ($resultProduk) {
-        $queryDeleteProduk = "DELETE FROM produk WHERE id_produk = '$id_produk'";
-        $sqlDeleteProduk = mysqli_query($conn, $queryDeleteProduk);
-
-        if ($sqlDeleteProduk) {
-            echo "<script>
-                Swal.fire({
-                    title: 'Sukses!',
-                    text: 'Produk berhasil dihapus!',
-                    icon: 'success',
-                    timer: 1500,
-                    timerProgressBar: true,
-                    showConfirmButton: false
-                }).then(() => {
-                    window.location.href = 'index.php';
-                });
-            </script>";
-        } else {
+        $queryDeletePenjualan = "DELETE FROM penjualan WHERE id_produk = '$id_produk'";
+        $sqlDeletePenjualan = mysqli_query($conn, $queryDeletePenjualan);
+        if (!$sqlDeletePenjualan) {
             echo "<script>
                 Swal.fire({
                     title: 'Gagal!',
-                    text: 'Gagal menghapus produk!',
+                    text: 'Gagal menghapus penjualan terkait!',
                     icon: 'error',
                     timer: 1500,
                     timerProgressBar: true,
@@ -57,20 +21,60 @@ if (isset($_GET['hapus'])) {
                     window.location.href = 'index.php';
                 });
             </script>";
+            exit;
+        }
+    }
+
+    $queryShowProduk = "SELECT * FROM produk WHERE id_produk = '$id_produk'";
+    $sqlShowProduk = mysqli_query($conn, $queryShowProduk);
+    $resultProduk = mysqli_fetch_array($sqlShowProduk);
+
+    unlink("img/" . $resultProduk['image']);
+
+    if ($resultProduk) {
+        $queryDeleteProduk = "DELETE FROM produk WHERE id_produk = '$id_produk'";
+        $sqlDeleteKategori = mysqli_query($conn, $queryDeleteProduk);
+
+        if ($sqlDeleteKategori) {
+            echo "<script>
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: 'Kategori berhasil dihapus!',
+                        icon: 'success',
+                        timer: 1500,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = 'index.php';
+                    });
+                </script>";
+        } else {
+            echo "<script>
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: 'Gagal menghapus produk!',
+                        icon: 'error',
+                        timer: 1500,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = 'index.php';
+                    });
+                </script>";
         }
     } else {
         echo "<script>
-            Swal.fire({
-                title: 'Gagal!',
-                text: 'Data Produk Tidak Ditemukan!',
-                icon: 'error',
-                timer: 1500,
-                timerProgressBar: true,
-                showConfirmButton: false
-            }).then(() => {
-                window.location.href = 'index.php';
-            });
-        </script>";
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Data produk tidak ditemukan!',
+                    icon: 'error',
+                    timer: 1500,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = 'index.php';
+                });
+            </script>";
     }
 }
 ?>

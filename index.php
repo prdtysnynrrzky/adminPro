@@ -212,7 +212,7 @@ require 'services/koneksi.php';
                     </div>
                     <ul class="navbar-nav  justify-content-end">
                         <li class="nav-item d-flex align-items-center gap-4">
-                            <a href="/profile/index.php" class="nav-link text-body font-weight-bold px-0">
+                            <a href="profile/index.php" class="nav-link text-body font-weight-bold px-0">
                                 <?php
                                 $queryUser = "SELECT * FROM admin";
                                 $sqlUser = mysqli_query($conn, $queryUser);
